@@ -1,0 +1,148 @@
+"use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
+
+const navLinks = [
+    { href: "/", label: "Home" },
+    { href: "/projects", label: "Projects" },
+    { href: "/contact", label: "Contact" },
+];
+
+export default function Navbar() {
+    const pathname = usePathname();
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [dateInfo, setDateInfo] = useState(null);
+    const [isDarkTheme, setIsDarkTheme] = useState(false);
+
+    useEffect(() => {
+        const updateDate = () => {
+            const now = new Date();
+            const day = now.toLocaleDateString("en-US", { weekday: "short" });
+            const date = now.getDate();
+            const month = now.toLocaleDateString("en-US", { month: "short" });
+            const year = now.getFullYear();
+            setDateInfo({ day, date, month, year });
+        };
+        updateDate();
+        const interval = setInterval(updateDate, 60000);
+
+        const handleScroll = () => {
+            // If we've scrolled past the hero section (100vh), switch to dark theme navbar
+            if (window.scrollY > window.innerHeight - 50) {
+                setIsDarkTheme(true);
+            } else {
+                setIsDarkTheme(false);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        // Check initially
+        handleScroll();
+
+        return () => {
+            clearInterval(interval);
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, []);
+
+    return (
+        <nav className="fixed top-0 left-0 right-0 z-[100] pointer-events-none">
+            <div className="container h-[72px] flex items-center justify-between">
+                {/* Logo - Inlined SVG for precise color control */}
+                <Link
+                    href="/"
+                    className={`flex items-center hover:opacity-80 transition-colors duration-300 pointer-events-auto ${isDarkTheme ? "text-white" : "text-[#1E1E1E]"}`}
+                >
+                    <svg width="146" height="48" viewBox="0 0 146 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-10 w-auto">
+                        {/* Orange Text/Icon parts remain hardcoded #FF6C1C */}
+                        <path d="M67.704 3.248L61.56 20H57.48L51.336 3.248H54.936L59.544 16.568L64.128 3.248H67.704ZM71.4225 5.12C70.8305 5.12 70.3345 4.936 69.9345 4.568C69.5505 4.184 69.3585 3.712 69.3585 3.152C69.3585 2.592 69.5505 2.128 69.9345 1.76C70.3345 1.376 70.8305 1.184 71.4225 1.184C72.0145 1.184 72.5025 1.376 72.8865 1.76C73.2865 2.128 73.4865 2.592 73.4865 3.152C73.4865 3.712 73.2865 4.184 72.8865 4.568C72.5025 4.936 72.0145 5.12 71.4225 5.12ZM73.0785 6.704V20H69.7185V6.704H73.0785ZM83.7662 6.512C85.3502 6.512 86.6302 7.016 87.6062 8.024C88.5822 9.016 89.0702 10.408 89.0702 12.2V20H85.7102V12.656C85.7102 11.6 85.4462 10.792 84.9182 10.232C84.3902 9.656 83.6702 9.368 82.7582 9.368C81.8302 9.368 81.0942 9.656 80.5502 10.232C80.0222 10.792 79.7582 11.6 79.7582 12.656V20H76.3982V6.704H79.7582V8.36C80.2062 7.784 80.7742 7.336 81.4622 7.016C82.1662 6.68 82.9342 6.512 83.7662 6.512ZM98.1694 20.216C96.8894 20.216 95.7374 19.936 94.7134 19.376C93.6894 18.8 92.8814 17.992 92.2894 16.952C91.7134 15.912 91.4254 14.712 91.4254 13.352C91.4254 11.992 91.7214 10.792 92.3134 9.752C92.9214 8.712 93.7454 7.912 94.7854 7.352C95.8254 6.776 96.9854 6.488 98.2654 6.488C99.5454 6.488 100.705 6.776 101.745 7.352C102.785 7.912 103.601 8.712 104.193 9.752C104.801 10.792 105.105 11.992 105.105 13.352C105.105 14.712 104.793 15.912 104.169 16.952C103.561 17.992 102.729 18.8 101.673 19.376C100.633 19.936 99.4654 20.216 98.1694 20.216ZM98.1694 17.288C98.7774 17.288 99.3454 17.144 99.8734 16.856C100.417 16.552 100.849 16.104 101.169 15.512C101.489 14.92 101.649 14.2 101.649 13.352C101.649 12.088 101.313 11.12 100.641 10.448C99.9854 9.76 99.1774 9.416 98.2174 9.416C97.2574 9.416 96.4494 9.76 95.7934 10.448C95.1534 11.12 94.8334 12.088 94.8334 13.352C94.8334 14.616 95.1454 15.592 95.7694 16.28C96.4094 16.952 97.2094 17.288 98.1694 17.288ZM120.29 6.704L112.058 26.288H108.482L111.362 19.664L106.034 6.704H109.802L113.234 15.992L116.714 6.704H120.29Z" fill="#FF6C1C" />
+                        <path d="M29.2651 25C36.8507 25 43 31.1493 43 38.7349V45H36.7349C29.1493 45 23 38.8507 23 31.2651C23 27.805 25.805 25 29.2651 25Z" fill="#FF6C1C" />
+
+                        {/* Black Text/Icon parts use currentColor to inherit and smoothly transition CSS text color */}
+                        <path className="transition-colors duration-300" d="M67.704 27.248L61.56 44H57.48L51.336 27.248H54.936L59.544 40.568L64.128 27.248H67.704ZM71.4225 29.12C70.8305 29.12 70.3345 28.936 69.9345 28.568C69.5505 28.184 69.3585 27.712 69.3585 27.152C69.3585 26.592 69.5505 26.128 69.9345 25.76C70.3345 25.376 70.8305 25.184 71.4225 25.184C72.0145 25.184 72.5025 25.376 72.8865 25.76C73.2865 26.128 73.4865 26.592 73.4865 27.152C73.4865 27.712 73.2865 28.184 72.8865 28.568C72.5025 28.936 72.0145 29.12 71.4225 29.12ZM73.0785 30.704V44H69.7185V30.704H73.0785ZM83.7662 30.512C85.3502 30.512 86.6302 31.016 87.6062 32.024C88.5822 33.016 89.0702 34.408 89.0702 36.2V44H85.7102V36.656C85.7102 35.6 85.4462 34.792 84.9182 34.232C84.3902 33.656 83.6702 33.368 82.7582 33.368C81.8302 33.368 81.0942 33.656 80.5502 34.232C80.0222 34.792 79.7582 35.6 79.7582 36.656V44H76.3982V30.704H79.7582V32.36C80.2062 31.784 80.7742 31.336 81.4622 31.016C82.1662 30.68 82.9342 30.512 83.7662 30.512ZM91.4014 37.352C91.4014 35.976 91.6814 34.776 92.2414 33.752C92.8014 32.712 93.5774 31.912 94.5694 31.352C95.5614 30.776 96.6974 30.488 97.9774 30.488C99.6254 30.488 100.985 30.904 102.057 31.736C103.145 32.552 103.873 33.704 104.241 35.192H100.617C100.425 34.616 100.097 34.168 99.6334 33.848C99.1854 33.512 98.6254 33.344 97.9534 33.344C96.9934 33.344 96.2334 33.696 95.6734 34.4C95.1134 35.088 94.8334 36.072 94.8334 37.352C94.8334 38.616 95.1134 39.6 95.6734 40.304C96.2334 40.992 96.9934 41.336 97.9534 41.336C99.3134 41.336 100.201 40.728 100.617 39.512H104.241C103.873 40.952 103.145 42.096 102.057 42.944C100.969 43.792 99.6094 44.216 97.9774 44.216C96.6974 44.216 95.5614 43.936 94.5694 43.376C93.5774 42.8 92.8014 42 92.2414 40.976C91.6814 39.936 91.4014 38.728 91.4014 37.352ZM119.063 37.064C119.063 37.544 119.031 37.976 118.967 38.36H109.247C109.327 39.32 109.663 40.072 110.255 40.616C110.847 41.16 111.575 41.432 112.439 41.432C113.687 41.432 114.575 40.896 115.103 39.824H118.727C118.343 41.104 117.607 42.16 116.519 42.992C115.431 43.808 114.095 44.216 112.511 44.216C111.231 44.216 110.079 43.936 109.055 43.376C108.047 42.8 107.255 41.992 106.679 40.952C106.119 39.912 105.839 38.712 105.839 37.352C105.839 35.976 106.119 34.768 106.679 33.728C107.239 32.688 108.023 31.888 109.031 31.328C110.039 30.768 111.199 30.488 112.511 30.488C113.775 30.488 114.903 30.76 115.895 31.304C116.903 31.848 117.679 32.624 118.223 33.632C118.783 34.624 119.063 35.768 119.063 37.064ZM115.583 36.104C115.567 35.24 115.255 34.552 114.647 34.04C114.039 33.512 113.295 33.248 112.415 33.248C111.583 33.248 110.879 33.504 110.303 34.016C109.743 34.512 109.399 35.208 109.271 36.104H115.583ZM128.883 30.512C130.467 30.512 131.747 31.016 132.723 32.024C133.699 33.016 134.187 34.408 134.187 36.2V44H130.827V36.656C130.827 35.6 130.563 34.792 130.035 34.232C129.507 33.656 128.787 33.368 127.875 33.368C126.947 33.368 126.211 33.656 125.667 34.232C125.139 34.792 124.875 35.6 124.875 36.656V44H121.515V30.704H124.875V32.36C125.323 31.784 125.891 31.336 126.579 31.016C127.283 30.68 128.051 30.512 128.883 30.512ZM141.295 33.464V39.896C141.295 40.344 141.399 40.672 141.607 40.88C141.831 41.072 142.199 41.168 142.711 41.168H144.271V44H142.159C139.327 44 137.911 42.624 137.911 39.872V33.464H136.327V30.704H137.911V27.416H141.295V30.704H144.271V33.464H141.295Z" fill="currentColor" />
+                        <path className="transition-colors duration-300" d="M0 38.7349C0 31.1493 6.14934 25 13.7349 25H20V31.2651C20 38.8507 13.8507 45 6.26506 45C2.80496 45 0 42.195 0 38.7349Z" fill="currentColor" />
+                        <path className="transition-colors duration-300" d="M43 8.26506C43 15.8507 36.8507 22 29.2651 22H23V15.7349C23 8.14934 29.1493 2 36.7349 2C40.195 2 43 4.80496 43 8.26506Z" fill="currentColor" />
+                        <path className="transition-colors duration-300" d="M6.26506 2C13.8507 2 20 8.14934 20 15.7349V22H13.7349C6.14934 22 0 15.8507 0 8.26506C0 4.80496 2.80496 2 6.26506 2Z" fill="currentColor" />
+                    </svg>
+                </Link>
+
+                {/* Desktop Nav */}
+                <ul className="hidden md:flex items-center gap-8 pointer-events-auto">
+                    {navLinks.map((link) => (
+                        <li key={link.href}>
+                            <Link
+                                href={link.href}
+                                className={`text-sm font-medium transition-colors duration-300 relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:transition-all after:duration-300 ${pathname === link.href
+                                    ? "text-burnt after:bg-burnt after:w-full"
+                                    : `${isDarkTheme ? "text-neutral-300 hover:text-white after:bg-white" : "text-neutral-500 hover:text-black after:bg-black"} after:w-0 hover:after:w-full`
+                                    }`}
+                            >
+                                {link.label}
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+
+                {/* Dynamic Date Display */}
+                {dateInfo && (
+                    <div className={`hidden md:flex items-end text-right leading-tight select-none pointer-events-auto transition-colors duration-300 ${isDarkTheme ? "text-white" : "text-black"}`}>
+                        <div className="text-base flex">
+                            <span className="block mr-[4px]">
+                                <span className="font-bold">{dateInfo.day}</span>
+                                <span className="font-normal ml-[2px]">{dateInfo.date}</span>
+                            </span>
+                            <span className="block">
+                                <span className="font-normal">{dateInfo.month}</span>{" "}
+                                <span className="font-bold text-burnt">{dateInfo.year}</span>
+                            </span>
+                        </div>
+                    </div>
+                )}
+
+                {/* Mobile menu button */}
+                <button
+                    className="md:hidden flex flex-col gap-[5px] cursor-pointer pointer-events-auto"
+                    onClick={() => setMenuOpen(!menuOpen)}
+                    aria-label="Toggle menu"
+                >
+                    <span
+                        className={`w-6 h-[2px] transition-all duration-300 ${isDarkTheme ? "bg-white" : "bg-black"} ${menuOpen ? "rotate-45 translate-y-[7px]" : ""
+                            }`}
+                    />
+                    <span
+                        className={`w-6 h-[2px] transition-all duration-300 ${isDarkTheme ? "bg-white" : "bg-black"} ${menuOpen ? "opacity-0" : ""
+                            }`}
+                    />
+                    <span
+                        className={`w-6 h-[2px] transition-all duration-300 ${isDarkTheme ? "bg-white" : "bg-black"} ${menuOpen ? "-rotate-45 -translate-y-[7px]" : ""
+                            }`}
+                    />
+                </button>
+            </div>
+
+            {/* Mobile Nav */}
+            <div
+                className={`md:hidden overflow-hidden transition-all duration-300 pointer-events-auto ${menuOpen ? "max-h-60 border-b border-neutral-100" : "max-h-0"} ${isDarkTheme ? "bg-[#111111]" : "bg-white"
+                    }`}
+            >
+                <ul className="flex flex-col px-8 md:px-16 py-4 gap-4">
+                    {navLinks.map((link) => (
+                        <li key={link.href}>
+                            <Link
+                                href={link.href}
+                                onClick={() => setMenuOpen(false)}
+                                className={`text-base font-medium transition-colors duration-200 ${pathname === link.href
+                                    ? "text-burnt"
+                                    : isDarkTheme ? "text-neutral-400 hover:text-white" : "text-neutral-500 hover:text-black"
+                                    }`}
+                            >
+                                {link.label}
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </nav>
+    );
+}
