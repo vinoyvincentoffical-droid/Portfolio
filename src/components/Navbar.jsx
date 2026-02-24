@@ -28,17 +28,23 @@ export default function Navbar() {
         const interval = setInterval(updateDate, 60000);
 
         const handleScroll = () => {
-            // If we've scrolled past the hero section (100vh), switch to dark theme navbar
-            if (window.scrollY > window.innerHeight - 50) {
-                setIsDarkTheme(true);
-            } else {
-                setIsDarkTheme(false);
+            // Check the element currently underneath the center of the navbar (y=20 to be safe within the 72px navbar)
+            const el = document.elementFromPoint(window.innerWidth / 2, 20);
+            if (el) {
+                // Find the closest parent section with a data-theme attribute
+                const section = el.closest('[data-theme]');
+                if (section) {
+                    setIsDarkTheme(section.getAttribute('data-theme') === 'dark');
+                } else {
+                    // Default to light theme if no data-theme parent is found
+                    setIsDarkTheme(false);
+                }
             }
         };
 
-        window.addEventListener("scroll", handleScroll);
+        window.addEventListener("scroll", handleScroll, { passive: true });
         // Check initially
-        handleScroll();
+        setTimeout(handleScroll, 100);
 
         return () => {
             clearInterval(interval);
@@ -87,15 +93,11 @@ export default function Navbar() {
                 {/* Dynamic Date Display */}
                 {dateInfo && (
                     <div className={`hidden md:flex items-end text-right leading-tight select-none pointer-events-auto transition-colors duration-300 ${isDarkTheme ? "text-white" : "text-black"}`}>
-                        <div className="text-base flex">
-                            <span className="block mr-[4px]">
-                                <span className="font-bold">{dateInfo.day}</span>
-                                <span className="font-normal ml-[2px]">{dateInfo.date}</span>
-                            </span>
-                            <span className="block">
-                                <span className="font-normal">{dateInfo.month}</span>{" "}
-                                <span className="font-bold text-burnt">{dateInfo.year}</span>
-                            </span>
+                        <div className="text-base flex items-center gap-1">
+                            <span className="font-bold">{dateInfo.day}</span>
+                            <span className="font-normal">{dateInfo.date}</span>
+                            <span className="font-normal">{dateInfo.month}</span>
+                            <span className="font-bold text-burnt">{dateInfo.year}</span>
                         </div>
                     </div>
                 )}

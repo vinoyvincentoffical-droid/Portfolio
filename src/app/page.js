@@ -36,6 +36,12 @@ export default function Home() {
             description: "I bridge the gap between design and development, ensuring what ships matches what was envisioned. From front-end implementation to quality assurance, I oversee the build process to deliver polished, production-ready digital products.",
             tags: ["Web Development", "Quality Assurance", "Creative Direction"],
         },
+        {
+            id: 4,
+            title: "Optimize & Evolve",
+            description: "Great products don't freeze in time. They learn, adapt, and sharpen themselves. I help teams move beyond launch by turning data into direction and feedback into refinement. Through performance analysis, user insights, and iterative design improvements, I ensure your product grows smarter, faster, and more aligned with real user needs.",
+            tags: ["Analytics & Insights", "User Testing", "Performance Optimization", "Continuous Improvement"],
+        },
     ];
 
     useEffect(() => {
@@ -80,11 +86,10 @@ export default function Home() {
             // About Section Animations
             const aboutTl = gsap.timeline({
                 scrollTrigger: {
-                    trigger: ".about-section",
+                    trigger: ".about-wrapper",
                     start: "top top",
-                    end: "+=180%",
-                    scrub: 1.5, // slightly more smoothing on scrub
-                    pin: true,
+                    end: "bottom bottom",
+                    scrub: 1.5,
                 }
             });
 
@@ -105,21 +110,22 @@ export default function Home() {
             // Add a buffer at the end of the timeline so the pin doesn't release abruptly
             aboutTl.to({}, { duration: 1.5 });
 
-            // CTA Section Animations
-            gsap.fromTo(
-                ".cta-content",
-                { y: 80, opacity: 0 },
-                {
-                    y: 0,
-                    opacity: 1,
-                    duration: 1,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: ".cta-section",
-                        start: "top 75%",
-                    }
+            // Accordion Scroll Animation
+            ScrollTrigger.create({
+                trigger: ".deliver-wrapper",
+                start: "top top",
+                end: "bottom bottom",
+                onUpdate: (self) => {
+                    const progress = self.progress;
+                    // Map progress 0-1 to item index 0-3
+                    const activeIndex = Math.min(
+                        3,
+                        Math.max(0, Math.floor(progress * 4))
+                    );
+                    setHoveredItem(activeIndex + 1);
                 }
-            );
+            });
+
         });
 
         return () => ctx.revert();
@@ -130,7 +136,7 @@ export default function Home() {
             <Navbar />
             <main>
                 {/* ───── Hero Section ───── */}
-                <section className="sticky top-0 h-screen overflow-hidden bg-[#f0f0f4]" style={{ isolation: 'isolate' }}>
+                <section data-theme="light" className="sticky top-0 h-screen overflow-hidden bg-[#f0f0f4]" style={{ isolation: 'isolate' }}>
                     {/* Geometric Grid Background */}
                     <div className="absolute inset-0 opacity-30">
                         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -254,117 +260,117 @@ export default function Home() {
                     </div>
                 </section>
 
-                {/* ───── About Section (Dark Mode, Full Height) ───── */}
-                <section className="about-section relative z-10 h-screen bg-[#111111] flex flex-col justify-center overflow-hidden py-24">
-                    {/* Background abstract arcs matching reference vibe (optional subtle touch) */}
-                    <div className="absolute top-12 right-12 opacity-10 pointer-events-none">
-                        <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M100 0 A100 100 0 0 1 200 100" stroke="white" strokeWidth="1" />
-                            <path d="M100 100 A100 100 0 0 0 0 200" stroke="white" strokeWidth="1" />
-                            <path d="M0 100 A100 100 0 0 1 100 0" stroke="white" strokeWidth="1" />
-                            <path d="M200 100 A100 100 0 0 0 100 200" stroke="white" strokeWidth="1" />
-                            <path d="M100 0 V200 M0 100 H200" stroke="white" strokeWidth="1" />
-                        </svg>
-                    </div>
-                    <div className="absolute bottom-12 left-12 opacity-10 pointer-events-none">
-                        <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M100 0 A100 100 0 0 0 0 100" stroke="white" strokeWidth="1" />
-                            <path d="M100 100 A100 100 0 0 1 200 200" stroke="white" strokeWidth="1" />
-                            <path d="M200 100 A100 100 0 0 0 100 0" stroke="white" strokeWidth="1" />
-                            <path d="M0 100 A100 100 0 0 1 100 200" stroke="white" strokeWidth="1" />
-                            <path d="M100 0 V200 M0 100 H200" stroke="white" strokeWidth="1" />
-                        </svg>
-                    </div>
-
-                    <div className="container relative z-10 flex flex-col h-full justify-center">
-                        {/* Main Typography */}
-                        <div className="max-w-[1000px] mb-16 sm:mb-24">
-                            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[64px] font-medium tracking-tight leading-[1.2] md:leading-[1.1]">
-                                {aboutWords.map((word, i) => (
-                                    <span key={i}>
-                                        <span className="reveal-word text-[#333333] transition-colors duration-[0ms]">{word}</span>
-                                        {i < aboutWords.length - 1 && " "}
-                                    </span>
-                                ))}
-                            </h2>
+                {/* ───── About Section Wrapper (provides scroll distance) ───── */}
+                <div data-theme="dark" className="about-wrapper relative z-10" style={{ height: '300vh' }}>
+                    <section className="about-section sticky top-0 h-screen bg-[#111111] flex flex-col justify-center overflow-hidden py-24">
+                        {/* Background abstract arcs matching reference vibe (optional subtle touch) */}
+                        <div className="absolute top-12 right-12 opacity-10 pointer-events-none">
+                            <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M100 0 A100 100 0 0 1 200 100" stroke="white" strokeWidth="1" />
+                                <path d="M100 100 A100 100 0 0 0 0 200" stroke="white" strokeWidth="1" />
+                                <path d="M0 100 A100 100 0 0 1 100 0" stroke="white" strokeWidth="1" />
+                                <path d="M200 100 A100 100 0 0 0 100 200" stroke="white" strokeWidth="1" />
+                                <path d="M100 0 V200 M0 100 H200" stroke="white" strokeWidth="1" />
+                            </svg>
+                        </div>
+                        <div className="absolute bottom-12 left-12 opacity-10 pointer-events-none">
+                            <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M100 0 A100 100 0 0 0 0 100" stroke="white" strokeWidth="1" />
+                                <path d="M100 100 A100 100 0 0 1 200 200" stroke="white" strokeWidth="1" />
+                                <path d="M200 100 A100 100 0 0 0 100 0" stroke="white" strokeWidth="1" />
+                                <path d="M0 100 A100 100 0 0 1 100 200" stroke="white" strokeWidth="1" />
+                                <path d="M100 0 V200 M0 100 H200" stroke="white" strokeWidth="1" />
+                            </svg>
                         </div>
 
-                        {/* Secondary Text and Buttons aligned to bottom right */}
-                        <div className="about-secondary opacity-0 flex justify-end w-full lg:mt-[30vh]">
-                            <div className="max-w-[480px] flex flex-col gap-6">
-                                <p className="text-neutral-400 text-lg md:text-xl leading-normal font-light">
-                                    Bringing your digital products to life with speed and accuracy. I blend the storytelling of branding with the ergonomics of UX to deliver software experiences that feel natural, premium, and complete.
-                                </p>
-                                <div className="flex flex-wrap items-center gap-5 pt-6">
-                                    <ParticleButton particleColor="#ffffff">
-                                        <Button variant="outline" asChild className="!px-10 !py-2 !h-auto rounded-full border-neutral-500 bg-transparent text-neutral-300 hover:bg-transparent hover:border-neutral-300 hover:text-white">
-                                            <Link href="/projects">Explore My Work</Link>
-                                        </Button>
-                                    </ParticleButton>
-                                    <ParticleButton particleColor="#FF6C1C">
-                                        <Button asChild className="!px-10 !py-2 !h-auto rounded-full bg-burnt text-white hover:bg-burnt hover:shadow-[0_0_20px_rgba(255,108,28,0.6)] transition-all duration-300">
-                                            <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">View My Resume</a>
-                                        </Button>
-                                    </ParticleButton>
+                        <div className="container relative z-10 flex flex-col h-full justify-center">
+                            {/* Main Typography */}
+                            <div className="max-w-[1000px] mb-16 sm:mb-24">
+                                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[64px] font-medium tracking-tight leading-[1.2] md:leading-[1.1]">
+                                    {aboutWords.map((word, i) => (
+                                        <span key={i}>
+                                            <span className="reveal-word text-[#333333] transition-colors duration-[0ms]">{word}</span>
+                                            {i < aboutWords.length - 1 && " "}
+                                        </span>
+                                    ))}
+                                </h2>
+                            </div>
+
+                            {/* Secondary Text and Buttons aligned to bottom right */}
+                            <div className="about-secondary opacity-0 flex justify-end w-full lg:mt-[30vh]">
+                                <div className="max-w-[480px] flex flex-col gap-6">
+                                    <p className="text-neutral-400 text-lg md:text-xl leading-normal font-light">
+                                        Bringing your digital products to life with speed and accuracy. I blend the storytelling of branding with the ergonomics of UX to deliver software experiences that feel natural, premium, and complete.
+                                    </p>
+                                    <div className="flex flex-wrap items-center gap-5 pt-6">
+                                        <ParticleButton particleColor="#ffffff">
+                                            <Button variant="outline" asChild className="!px-10 !py-2 !h-auto rounded-full border-neutral-500 bg-transparent text-neutral-300 hover:bg-transparent hover:border-neutral-300 hover:text-white">
+                                                <Link href="/projects">Explore My Work</Link>
+                                            </Button>
+                                        </ParticleButton>
+                                        <ParticleButton particleColor="#FF6C1C">
+                                            <Button asChild className="!px-10 !py-2 !h-auto rounded-full bg-burnt text-white hover:bg-burnt hover:shadow-[0_0_20px_rgba(255,108,28,0.6)] transition-all duration-300">
+                                                <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">View My Resume</a>
+                                            </Button>
+                                        </ParticleButton>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                </div>
 
                 {/* ───── What I Deliver Section ───── */}
-                <section className="relative z-10 bg-[#f0f0f4] min-h-screen flex items-center py-24 px-6 md:px-16 lg:px-24">
-                    <div className="w-full max-w-[1200px] mx-auto">
-                        {/* Header */}
-                        <div className="flex justify-between items-start mb-20">
-                            <div>
-                                <h2 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-black mb-10 leading-[1.1]">
-                                    What I <span className="text-burnt italic">Deliver</span>.
-                                </h2>
-                                <p className="text-neutral-500 text-sm md:text-base leading-relaxed max-w-md ml-20 sm:ml-32">
-                                    I offer a multidisciplinary approach to digital product design. By combining strategic branding with rigorous user experience principles, I help companies build products that are scalable, intuitive, and visually distinct.
-                                </p>
-                            </div>
-                            {/* Decorative geometric arcs */}
-                            <div className="hidden md:block opacity-15 mt-2">
-                                <svg width="140" height="140" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M70 0 A70 70 0 0 1 140 70" stroke="#999" strokeWidth="0.8" />
-                                    <path d="M70 70 A70 70 0 0 0 0 140" stroke="#999" strokeWidth="0.8" />
-                                    <path d="M0 70 A70 70 0 0 1 70 0" stroke="#999" strokeWidth="0.8" />
-                                    <path d="M140 70 A70 70 0 0 0 70 140" stroke="#999" strokeWidth="0.8" />
-                                    <line x1="70" y1="0" x2="70" y2="140" stroke="#999" strokeWidth="0.8" />
-                                    <line x1="0" y1="70" x2="140" y2="70" stroke="#999" strokeWidth="0.8" />
-                                    <rect x="25" y="25" width="90" height="90" fill="none" stroke="#999" strokeWidth="0.5" />
-                                </svg>
+                <div data-theme="light" className="deliver-wrapper relative z-20" style={{ marginTop: '-100vh', height: '200vh' }}>
+                    <section className="deliver-section sticky top-0 bg-[#f0f0f4] min-h-screen flex flex-col justify-between pb-0" style={{ paddingTop: '25vh' }}>
+                        {/* Header — constrained width */}
+                        <div className="deliver-header container mb-32">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <h2 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-black mb-10 leading-[1.1]">
+                                        What I <span className="text-burnt italic">Deliver</span>.
+                                    </h2>
+                                    <p className="text-neutral-500 text-sm md:text-base leading-relaxed max-w-md ml-20 sm:ml-32">
+                                        I offer a multidisciplinary approach to digital product design. By combining strategic branding with rigorous user experience principles, I help companies build products that are scalable, intuitive, and visually distinct.
+                                    </p>
+                                </div>
+                                {/* Decorative geometric arcs */}
+                                <div className="hidden md:block opacity-15 mt-2">
+                                    <svg width="140" height="140" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M70 0 A70 70 0 0 1 140 70" stroke="#999" strokeWidth="0.8" />
+                                        <path d="M70 70 A70 70 0 0 0 0 140" stroke="#999" strokeWidth="0.8" />
+                                        <path d="M0 70 A70 70 0 0 1 70 0" stroke="#999" strokeWidth="0.8" />
+                                        <path d="M140 70 A70 70 0 0 0 70 140" stroke="#999" strokeWidth="0.8" />
+                                        <line x1="70" y1="0" x2="70" y2="140" stroke="#999" strokeWidth="0.8" />
+                                        <line x1="0" y1="70" x2="140" y2="70" stroke="#999" strokeWidth="0.8" />
+                                        <rect x="25" y="25" width="90" height="90" fill="none" stroke="#999" strokeWidth="0.5" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
 
-                        {/* Accordion Items */}
-                        <div className="flex flex-col border-t border-neutral-300/80" style={{ height: '50vh' }}>
+                        {/* Accordion — full width container */}
+                        <div className="deliver-accordion w-full flex flex-col border-t border-neutral-300/80" style={{ height: '50vh' }}>
                             {deliverables.map((item) => {
                                 const isActive = hoveredItem === item.id;
                                 const num = String(item.id).padStart(2, "0");
                                 return (
                                     <div
                                         key={item.id}
-                                        className={`border-b border-neutral-300/80 cursor-pointer overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] ${isActive ? "bg-burnt flex-[3]" : "bg-transparent flex-[1]"
+                                        className={`border-b border-neutral-300/80 overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] ${isActive ? "bg-burnt flex-[3]" : "bg-transparent flex-[1]"
                                             }`}
-                                        onMouseEnter={() => setHoveredItem(item.id)}
                                     >
-                                        <div className={`h-full flex items-start gap-4 md:gap-8 transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] ${isActive ? "px-8 md:px-12 py-8 md:py-10" : "px-4 md:px-8 py-5 md:py-6"
+                                        <div className={`h-full container flex items-center gap-4 md:gap-8 transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] ${isActive ? "py-8" : "py-5"
                                             }`}>
-                                            {/* Left border accent */}
-                                            <div className={`hidden sm:block w-[3px] self-stretch rounded-full flex-shrink-0 transition-colors duration-500 ${isActive ? "bg-white/30" : "bg-neutral-300"
-                                                }`} />
 
-                                            {/* Title */}
-                                            <h3 className={`text-2xl sm:text-3xl md:text-[40px] font-semibold tracking-tight leading-tight transition-all duration-500 flex-shrink-0 w-[180px] sm:w-[240px] md:w-[340px] ${isActive ? "text-white scale-100" : "text-black scale-[0.95]"
+                                            {/* Title — 50% */}
+                                            <h3 className={`text-2xl sm:text-3xl md:text-[40px] font-semibold tracking-tight leading-tight transition-all duration-500 flex-shrink-0 w-[50%] ${isActive ? "text-white" : "text-black"
                                                 }`}>
                                                 {item.title}
                                             </h3>
 
-                                            {/* Middle: description (on active) + tags */}
-                                            <div className="flex-1 min-w-0">
+                                            {/* Middle: description + tags — 30% */}
+                                            <div className="w-[30%] flex-shrink-0">
                                                 <div className={`transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden ${isActive ? "max-h-[250px] opacity-100 mb-5" : "max-h-0 opacity-0 mb-0"
                                                     }`}>
                                                     <p className="text-white/85 text-sm md:text-[15px] leading-relaxed pr-4">
@@ -387,64 +393,27 @@ export default function Home() {
                                                 </div>
                                             </div>
 
-                                            {/* Number */}
-                                            <span className={`text-5xl md:text-7xl font-bold tracking-tight transition-all duration-700 flex-shrink-0 leading-none ${isActive ? "text-white/80 scale-110" : "text-neutral-300 scale-100"
+                                            {/* Number — 10% */}
+                                            <span className={`text-5xl md:text-7xl font-bold tracking-tight transition-all duration-700 flex-shrink-0 leading-none w-[10%] text-right ${isActive ? "text-white/80" : "text-neutral-300"
                                                 }`}>
                                                 {num}
                                             </span>
 
-                                            {/* Decorative pattern (visible on active) */}
-                                            <div className={`hidden lg:flex items-center flex-shrink-0 transition-all duration-500 ${isActive ? "opacity-25 scale-100" : "opacity-0 scale-75"
-                                                }`}>
-                                                <svg width="55" height="55" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M30 0 A30 30 0 0 1 60 30" stroke={isActive ? "white" : "#999"} strokeWidth="1" />
-                                                    <path d="M30 30 A30 30 0 0 0 0 60" stroke={isActive ? "white" : "#999"} strokeWidth="1" />
-                                                    <path d="M0 30 A30 30 0 0 1 30 0" stroke={isActive ? "white" : "#999"} strokeWidth="1" />
-                                                    <path d="M60 30 A30 30 0 0 0 30 60" stroke={isActive ? "white" : "#999"} strokeWidth="1" />
-                                                    <rect x="10" y="10" width="40" height="40" fill="none" stroke={isActive ? "white" : "#999"} strokeWidth="0.5" />
-                                                </svg>
-                                            </div>
+
                                         </div>
                                     </div>
                                 );
                             })}
                         </div>
-                    </div>
-                </section>
+                    </section>
+                </div>
 
-                {/* ───── CTA Section ───── */}
-                <section className="cta-section py-24 container relative z-10 bg-white">
-                    <div className="cta-content max-w-3xl mx-auto text-center space-y-6">
-                        <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-black">
-                            Let's create something
-                            <span className="text-burnt"> amazing</span> together.
-                        </h2>
-                        <p className="text-neutral-500 text-lg max-w-lg mx-auto">
-                            I'm currently open to new opportunities and collaborations. Let's
-                            talk about your next project.
-                        </p>
-                        <Link
-                            href="/contact"
-                            className="inline-flex items-center gap-2 bg-black text-white px-8 py-4 rounded-full font-medium text-sm hover:bg-burnt transition-all duration-300 hover:shadow-lg hover:shadow-burnt/25 hover:-translate-y-0.5"
-                        >
-                            Start a Conversation
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="16"
-                                height="16"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                <path d="M5 12h14" />
-                                <path d="m12 5 7 7-7 7" />
-                            </svg>
-                        </Link>
-                    </div>
-                </section>
+                {/* ───── Empty Test Section ───── */}
+                <div data-theme="dark" className="relative z-40">
+                    <section className="sticky top-0 min-h-screen bg-[#1a1a2e] flex items-center justify-center">
+                        <h2 className="text-5xl font-bold text-white/20">Test Overlay Section</h2>
+                    </section>
+                </div>
             </main>
             <Footer />
         </>
