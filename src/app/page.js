@@ -8,48 +8,87 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
 import ParticleButton from "@/components/ParticleButton";
 
-const projects = [
+// Moved outside component to avoid re-creation on every render
+const ROLES = ["Product Designer", "UI Designer", "UX Designer", "HI Designer"];
+
+const DELIVERABLES = [
     {
         id: 1,
-        title: "Synctric Capital",
-        description: "Transforming the visual identity and web presence for a capital management firm with precision.",
-        category: "Web Design",
-        iframeSrc: "https://www.behance.net/embed/project/231739003?ilo0=1",
-        colSpan: "md:col-span-2",
-        rowSpan: "md:row-span-1",
-        layout: "horizontal",
+        title: "Strategy & Identity",
+        description: "I don't just design assets; I define the \"why\" behind them. I partner with stakeholders to translate abstract business goals into a concrete visual language. By aligning market positioning with a minimal, scalable identity systems, I ensure the brand builds trust before a user even interacts with the product.",
+        tags: ["Brand Strategy", "Visual Identity", "Art Direction"],
     },
     {
         id: 2,
-        title: "Health & Wellness UI",
-        description: "A clean approach to tracking well-being.",
-        category: "Mobile Design",
-        iframeSrc: "https://www.behance.net/embed/project/214003077?ilo0=1",
-        colSpan: "md:col-span-1",
-        rowSpan: "md:row-span-2",
-        layout: "vertical",
+        title: "Product & Experience",
+        description: "I design interfaces that balance beauty with usability. From wireframes to pixel-perfect UI, I craft every interaction to feel intuitive and purposeful. My process bridges user research with visual design to create products people genuinely enjoy using.",
+        tags: ["UI/UX Design", "Prototyping", "Design Systems", "Product Logic"],
     },
     {
         id: 3,
-        title: "E-Commerce App",
-        description: "High-conversion design.",
-        category: "UX/UI",
-        iframeSrc: "https://www.behance.net/embed/project/231739003?ilo0=1",
-        colSpan: "md:col-span-1",
-        rowSpan: "md:row-span-1",
-        layout: "vertical",
+        title: "Build & Launch",
+        description: "I bridge the gap between design and development, ensuring what ships matches what was envisioned. From front-end implementation to quality assurance, I oversee the build process to deliver polished, production-ready digital products.",
+        tags: ["Web Development", "Quality Assurance", "Creative Direction"],
     },
     {
         id: 4,
-        title: "Fintech Platform",
-        description: "Smarter transactions.",
-        category: "Product Design",
-        iframeSrc: "https://www.behance.net/embed/project/214003077?ilo0=1",
-        colSpan: "md:col-span-1",
-        rowSpan: "md:row-span-1",
-        layout: "vertical",
-    }
+        title: "Optimize & Evolve",
+        description: "Great products don't freeze in time. They learn, adapt, and sharpen themselves. I help teams move beyond launch by turning data into direction and feedback into refinement. Through performance analysis, user insights, and iterative design improvements, I ensure your product grows smarter, faster, and more aligned with real user needs.",
+        tags: ["Analytics & Insights", "User Testing", "Performance Optimization", "Continuous Improvement"],
+    },
 ];
+
+const PROJECTS = [
+    {
+        id: 1,
+        category: "Web Design",
+        title: "Synctric Capital",
+        subtitle: "Experience Architecture & Digital Ecosystem",
+        image: "/assets/card_synctric.png",
+        description: "We architected a comprehensive suite of digital tools designed to help financial businesses optimize growth by providing deep insights into user behavior and streamlining complex campaign logic.",
+    },
+    {
+        id: 2,
+        category: "Mobile Design",
+        title: "Health Wellness App",
+        subtitle: "Mobile Application UI Design",
+        image: "/assets/card_health.png",
+        description: "An intuitive, highly accessible mobile interface designed to help users track nutritional intake and physical wellness effectively. Utilizes stark contrasts and spacious typography for ultimate readability.",
+    },
+    {
+        id: 3,
+        category: "UX/UI",
+        title: "Omni Dashboard",
+        subtitle: "B2B User Experience Architecture",
+        image: "/assets/card_omni.png",
+        description: "Restructuring a legacy SaaS product. We conducted extensive user testing to streamline a confusing 14-step onboarding process into a seamless 3-step wizard, resulting in a 40% reduction in bounce rate.",
+    },
+    {
+        id: 4,
+        category: "Print Design",
+        title: "Exhibition '25",
+        subtitle: "Typography & Print Visuals",
+        image: "/assets/card_poster.png",
+        description: "A high-contrast, brutalist poster series for an upcoming modern art exhibition. Utilizing strict grid systems pushed to their limits to explore the boundaries of legibility and visual tension.",
+    },
+    {
+        id: 5,
+        category: "Brand Strategy",
+        title: "Nexus Group",
+        subtitle: "Brand Strategy & Guidelines",
+        image: "/assets/card_nexus.png",
+        description: "Developed a comprehensive visual identity that resonates with their core audience. Delivered scalable logo systems, strict typographic hierarchy, and a 100-page brand playbook ensuring omni-channel consistency.",
+    },
+    {
+        id: 6,
+        category: "Packaging",
+        title: "Aura Skincare",
+        subtitle: "Sustainable Structural Packaging",
+        image: "/assets/card_aura.png",
+        description: "Engineering a bespoke, highly sustainable unboxing experience. We designed structural cardboard replacements for legacy plastic inserts that speak volumes about their commitment to the planet.",
+    },
+];
+
 
 export default function Home() {
     const imgRef = useRef(null);
@@ -57,35 +96,9 @@ export default function Home() {
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
     const [subtitleRight, setSubtitleRight] = useState(0);
     const [roleIndex, setRoleIndex] = useState(0);
-    const roles = ["Product Designer", "UI Designer", "UX Designer", "HI Designer"];
     const [hoveredItem, setHoveredItem] = useState(1);
 
-    const deliverables = [
-        {
-            id: 1,
-            title: "Strategy & Identity",
-            description: "I don't just design assets; I define the \"why\" behind them. I partner with stakeholders to translate abstract business goals into a concrete visual language. By aligning market positioning with a minimal, scalable identity systems, I ensure the brand builds trust before a user even interacts with the product.",
-            tags: ["Brand Strategy", "Visual Identity", "Art Direction"],
-        },
-        {
-            id: 2,
-            title: "Product & Experience",
-            description: "I design interfaces that balance beauty with usability. From wireframes to pixel-perfect UI, I craft every interaction to feel intuitive and purposeful. My process bridges user research with visual design to create products people genuinely enjoy using.",
-            tags: ["UI/UX Design", "Prototyping", "Design Systems", "Product Logic"],
-        },
-        {
-            id: 3,
-            title: "Build & Launch",
-            description: "I bridge the gap between design and development, ensuring what ships matches what was envisioned. From front-end implementation to quality assurance, I oversee the build process to deliver polished, production-ready digital products.",
-            tags: ["Web Development", "Quality Assurance", "Creative Direction"],
-        },
-        {
-            id: 4,
-            title: "Optimize & Evolve",
-            description: "Great products don't freeze in time. They learn, adapt, and sharpen themselves. I help teams move beyond launch by turning data into direction and feedback into refinement. Through performance analysis, user insights, and iterative design improvements, I ensure your product grows smarter, faster, and more aligned with real user needs.",
-            tags: ["Analytics & Insights", "User Testing", "Performance Optimization", "Continuous Improvement"],
-        },
-    ];
+
 
     useEffect(() => {
         const handleMouseMove = (e) => {
@@ -113,9 +126,10 @@ export default function Home() {
     // Rotate roles
     useEffect(() => {
         const interval = setInterval(() => {
-            setRoleIndex((prev) => (prev + 1) % roles.length);
+            setRoleIndex((prev) => (prev + 1) % ROLES.length);
         }, 2500);
         return () => clearInterval(interval);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const aboutText = "I'm a Product Designer who combines aesthetic flair with technical logic to build next-gen interfaces. I value clarity, consistency, and user happiness.";
@@ -169,107 +183,71 @@ export default function Home() {
                 }
             });
 
-            // Works Section Horizontal Scroll & Flip Animation
+            // 2. What I Deliver -> Works Transition
+            // Overlap is handled via static marginTop: -100vh in the JSX and z-index.
+            // This ensures ScrollTrigger calculations remain stable for pinning.
+
+
+            // 3. Works Section Horizontal Scroll & Flip Animation
             const worksWrapper = document.querySelector(".works-wrapper");
             const scrollContainer = document.querySelector(".works-scroll-container");
             const cards = gsap.utils.toArray(".work-card-container");
 
             if (worksWrapper && scrollContainer && cards.length > 0) {
-                // Determine how far to translate the container horizontally left for the scroll
+                // Main Timeline for pinning and horizontal scroll
+                const worksTl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: worksWrapper,
+                        // Start pinning once it has fully slid up over the previous section
+                        start: "top top",
+                        end: () => `+=${scrollContainer.scrollWidth + window.innerWidth}`,
+                        pin: true,
+                        scrub: 1.2,
+                        anticipatePin: 1,
+                        invalidateOnRefresh: true,
+                    }
+                });
+
+                const sectionEase = "power2.inOut";
+
                 const getScrollAmount = () => {
                     let containerWidth = scrollContainer.scrollWidth;
                     let viewportWidth = window.innerWidth;
                     return -(containerWidth - viewportWidth);
                 };
 
-                // 1. Enter from right Animation (Unpinned)
-                // Container padding is set via CSS so x:0 naturally centers the first card
-                gsap.fromTo(scrollContainer,
+                // Entry Slide: Ensure it starts from off-screen relative to the current container position
+                worksTl.fromTo(scrollContainer,
                     { x: "100vw" },
-                    {
-                        x: 0,
-                        ease: "power2.out",
-                        scrollTrigger: {
-                            trigger: worksWrapper,
-                            start: "top 75%", // Starts when top of section is at 75% of viewport
-                            end: "top top",   // Ends when top of section reaches top
-                            scrub: 1,
-                        }
-                    }
+                    { x: 0, duration: 1.5, ease: sectionEase }
                 );
 
-                // 1b. Flip the first card concurrently with the slide-in!
-                const firstCardInner = cards[0].querySelector(".work-card-inner");
-                gsap.fromTo(firstCardInner,
-                    { rotateY: 0 },
-                    {
-                        rotateY: 180,
-                        transformOrigin: "50% 50%",
-                        ease: "power2.out",
-                        scrollTrigger: {
-                            trigger: worksWrapper,
-                            start: "top 75%",
-                            end: "top top",
-                            scrub: 1,
-                        }
-                    }
-                );
-
-                // 2. Pin, Horizontal Scroll, and Flip Animation
-                const worksTl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: worksWrapper,
-                        start: "top top",
-                        end: () => `+=${scrollContainer.scrollWidth * 1.8}`, // Extended horizontal scroll distance
-                        pin: true,
-                        scrub: 1,
-                        invalidateOnRefresh: true
-                    }
-                });
-
-                // Scroll horizontally
+                // Horizontal movement
                 worksTl.to(scrollContainer, {
                     x: getScrollAmount,
                     ease: "none",
-                    duration: 3
+                    duration: 4
                 });
 
-                // 3. Un-Flip the first card as it moves past the center to the left
-                gsap.to(firstCardInner, {
-                    rotateY: 0,
-                    transformOrigin: "50% 50%",
-                    ease: "power2.inOut",
-                    immediateRender: false,
-                    scrollTrigger: {
-                        trigger: cards[0],
-                        containerAnimation: worksTl,
-                        start: "center center-=50",  // Start closing slightly after center
-                        end: "center center-=350",   // Fully closed off left
-                        scrub: true,
-                    }
-                });
-
-                // 4. Flip other cards symmetrically as they pass through the center
-                for (let i = 1; i < cards.length; i++) {
-                    const innerCard = cards[i].querySelector(".work-card-inner");
-                    gsap.to(innerCard, {
-                        keyframes: {
-                            "0%": { rotateY: 0 },
-                            "30%": { rotateY: 180 }, // Fully flipped
-                            "70%": { rotateY: 180 }, // Stay fully flipped while securely in center
-                            "100%": { rotateY: 0 }   // Close as it leaves center
-                        },
-                        transformOrigin: "50% 50%",
-                        ease: "power1.inOut",
-                        scrollTrigger: {
-                            trigger: cards[i],
-                            containerAnimation: worksTl,
-                            start: "center center+=350", // Card's center approaches from right
-                            end: "center center-=350",   // Card's center leaves to left
-                            scrub: true,
+                // Card Flip Logic — flip when card center crosses viewport center
+                cards.forEach((card, i) => {
+                    const innerCard = card.querySelector(".work-card-inner");
+                    gsap.fromTo(innerCard,
+                        { rotateY: 0 },
+                        {
+                            rotateY: 180,
+                            transformOrigin: "50% 50%",
+                            ease: "power2.inOut",
+                            scrollTrigger: {
+                                trigger: card,
+                                containerAnimation: worksTl,
+                                start: "center 60%",
+                                end: "center 40%",
+                                scrub: 1.5,
+                            }
                         }
-                    });
-                }
+                    );
+                });
             }
         });
 
@@ -327,14 +305,14 @@ export default function Home() {
                             <span className="text-black font-bold">//</span>
                             {/* Set a fixed height matching the line-height (e.g., about 1.2em) so it never collapses, avoiding layout jumps. Flex layout naturally centers the absolutes gracefully vs top-0 baseline alignments. */}
                             <span className="relative flex items-center overflow-hidden text-left" style={{ width: '14ch', height: '1.2em', transform: 'translateY(2px)' }}>
-                                {roles.map((role, i) => (
+                                {ROLES.map((role, i) => (
                                     <span
                                         key={role}
                                         className="absolute left-0 w-full text-burnt transition-all duration-500 ease-in-out"
                                         style={{
                                             transform: i === roleIndex
                                                 ? 'translateY(0) rotateX(0)'
-                                                : i === (roleIndex - 1 + roles.length) % roles.length
+                                                : i === (roleIndex - 1 + ROLES.length) % ROLES.length
                                                     ? 'translateY(-100%) rotateX(90deg)'
                                                     : 'translateY(100%) rotateX(-90deg)',
                                             opacity: i === roleIndex ? 1 : 0,
@@ -466,7 +444,7 @@ export default function Home() {
                 </div>
 
                 {/* ───── What I Deliver Section ───── */}
-                <div data-theme="light" className="deliver-wrapper relative z-20" style={{ marginTop: '-100vh', height: '200vh' }}>
+                <div data-theme="light" className="deliver-wrapper relative z-20" style={{ marginTop: '-100vh', height: '300vh' }}>
                     <section className="deliver-section sticky top-0 bg-[#f0f0f4] min-h-screen flex flex-col justify-between pb-0" style={{ paddingTop: '25vh' }}>
                         {/* Header — constrained width */}
                         <div className="deliver-header container mb-32">
@@ -496,7 +474,7 @@ export default function Home() {
 
                         {/* Accordion — full width container */}
                         <div className="deliver-accordion w-full flex flex-col border-t border-neutral-300/80" style={{ height: '50vh' }}>
-                            {deliverables.map((item) => {
+                            {DELIVERABLES.map((item) => {
                                 const isActive = hoveredItem === item.id;
                                 const num = String(item.id).padStart(2, "0");
                                 return (
@@ -554,7 +532,7 @@ export default function Home() {
                 </div>
 
                 {/* ───── Works Section (Horizontal Scroll & Flip Reveal) ───── */}
-                <div data-theme="dark" className="works-wrapper relative z-40 bg-[#111111]">
+                <div data-theme="dark" className="works-wrapper relative z-40 bg-[#111111]" style={{ marginTop: '-100vh' }}>
                     <section className="h-screen w-full flex flex-col justify-center overflow-hidden py-10 md:py-20" style={{ perspective: "1500px" }}>
                         <div className="container max-w-[1400px] w-full mx-auto px-4 md:px-8 mb-8 md:mb-12 flex flex-col md:flex-row justify-between items-end gap-6 flex-shrink-0">
                             <div>
@@ -565,7 +543,7 @@ export default function Home() {
                                     </svg>
                                 </h2>
                             </div>
-                            <Button className="rounded-full bg-transparent border border-white text-white hover:bg-white hover:text-black px-8 py-6 text-sm flex items-center gap-3 transition-colors">
+                            <Button className="rounded-full !h-auto bg-transparent border border-white text-white hover:bg-white hover:text-black !px-8 !py-3 text-sm flex items-center gap-3 transition-colors">
                                 About Us
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 19L19 5m0 0v10m0-10H9" />
@@ -577,205 +555,35 @@ export default function Home() {
                         <div className="w-full overflow-visible">
                             <div className="works-scroll-container flex gap-6 w-max h-[60vh] max-h-[600px] min-h-[450px] pl-[calc(50vw-175px)] md:pl-[calc(50vw-210px)] pr-[calc(50vw-175px)] md:pr-[calc(50vw-210px)]">
 
-                                {/* ───── Card 1: Experience Design ───── */}
-                                <div className="work-card-container group relative w-[350px] md:w-[420px] h-full shrink-0" style={{ perspective: "2000px" }}>
-                                    <div className="work-card-inner relative w-full h-full transition-transform duration-1000 [transform-style:preserve-3d]">
-                                        {/* Front (Image, Title, Subtext) */}
-                                        <div className="absolute inset-0 [backface-visibility:hidden] bg-white rounded-[2rem] p-4 flex flex-col">
-                                            <div className="w-full h-3/5 rounded-2xl bg-neutral-100 overflow-hidden mb-5">
-                                                {/* Placeholder Image abstract pattern */}
-                                                <div className="w-full h-full bg-gradient-to-tr from-blue-500/10 to-purple-500/10 flex items-center justify-center">
-                                                    <div className="w-20 h-20 rounded-full border border-blue-500/20"></div>
+                                {PROJECTS.map((project) => (
+                                    <div key={project.id} className="work-card-container group relative w-[350px] md:w-[420px] h-full shrink-0" style={{ perspective: "1200px" }}>
+                                        <div className="work-card-inner relative w-full h-full" style={{ transformStyle: "preserve-3d" }}>
+                                            {/* Front */}
+                                            <div className="absolute inset-0 bg-white rounded-[2rem] p-4 flex flex-col gap-4" style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}>
+                                                <div className="w-full flex-1 rounded-2xl overflow-hidden">
+                                                    <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+                                                </div>
+                                                <div className="px-4 pb-2">
+                                                    <p className="text-[11px] font-semibold uppercase tracking-widest text-neutral-400 mb-1">{project.category}</p>
+                                                    <h3 className="text-xl font-bold text-black leading-tight">{project.title}</h3>
+                                                    <p className="text-neutral-500 text-xs font-medium mt-0.5">{project.subtitle}</p>
                                                 </div>
                                             </div>
-                                            <div className="px-2">
-                                                <h3 className="text-2xl font-bold text-black mb-2">Synctric Capital</h3>
-                                                <p className="text-neutral-500 text-sm font-medium">Experience Architecture & Digital Ecosystem</p>
-                                            </div>
-                                        </div>
-                                        {/* Back (Title, Details, Button) */}
-                                        <div className="absolute inset-0 [backface-visibility:hidden] bg-[#1a1a1a] rounded-[2rem] border border-neutral-800 p-8 flex flex-col justify-between [transform:rotateY(180deg)]">
-                                            <div>
-                                                <h3 className="text-white text-3xl font-bold mb-4">Synctric Capital</h3>
-                                                <div className="w-12 h-1 bg-neutral-700 mb-6"></div>
-                                                <p className="text-neutral-400 text-sm leading-relaxed mb-6 block w-full">
-                                                    We architected a comprehensive suite of digital tools designed to help financial businesses optimize growth by providing deep insights into user behavior and streamlining complex campaign logic into an accessible ecosystem.
-                                                </p>
-                                            </div>
-                                            <button className="w-full py-4 rounded-xl bg-white text-black font-semibold text-sm hover:bg-neutral-200 transition-colors flex items-center justify-center gap-2">
-                                                View Complete Project
-                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* ───── Card 2: UI Design ───── */}
-                                <div className="work-card-container group relative w-[350px] md:w-[420px] h-full shrink-0" style={{ perspective: "2000px" }}>
-                                    <div className="work-card-inner relative w-full h-full transition-transform" style={{ transformStyle: "preserve-3d" }}>
-                                        {/* Front */}
-                                        <div className="absolute inset-0 bg-white rounded-[2rem] p-4 flex flex-col" style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}>
-                                            <div className="w-full h-3/5 rounded-2xl bg-neutral-100 overflow-hidden mb-5">
-                                                {/* Placeholder Image */}
-                                                <div className="w-full h-full bg-gradient-to-tr from-emerald-500/10 to-teal-500/10 flex items-center justify-center gap-1">
-                                                    <div className="w-8 h-8 rounded-md bg-emerald-500/20"></div>
-                                                    <div className="w-8 h-8 rounded-md bg-teal-500/20"></div>
+                                            {/* Back */}
+                                            <div className="absolute inset-0 bg-[#111] rounded-[2rem] border border-neutral-800 p-7 flex flex-col justify-between" style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
+                                                <div>
+                                                    <p className="text-[11px] font-semibold uppercase tracking-widest text-neutral-500 mb-3">{project.category}</p>
+                                                    <h3 className="text-white text-2xl font-bold mb-3 leading-tight">{project.title}</h3>
+                                                    <div className="w-8 h-[2px] bg-[#FF6C1C] mb-4"></div>
+                                                    <p className="text-neutral-400 text-sm leading-relaxed">{project.description}</p>
                                                 </div>
+                                                <button className="w-full py-3.5 rounded-xl bg-white text-black font-semibold text-sm hover:bg-neutral-100 transition-colors flex items-center justify-center gap-2">
+                                                    View Project <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                                                </button>
                                             </div>
-                                            <div className="px-2">
-                                                <h3 className="text-2xl font-bold text-black mb-2">Health Wellness App</h3>
-                                                <p className="text-neutral-500 text-sm font-medium">Mobile Application UI Design</p>
-                                            </div>
-                                        </div>
-                                        {/* Back */}
-                                        <div className="absolute inset-0 bg-[#1a1a1a] rounded-[2rem] border border-neutral-800 p-8 flex flex-col justify-between" style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
-                                            <div>
-                                                <h3 className="text-white text-3xl font-bold mb-4">Health Wellness App</h3>
-                                                <div className="w-12 h-1 bg-neutral-700 mb-6"></div>
-                                                <p className="text-neutral-400 text-sm leading-relaxed mb-6 block w-full">
-                                                    An intuitive, highly accessible mobile interface designed to help users track nutritional intake and physical wellness effectively. Utilizes stark contrasts and spacious typography for ultimate readability.
-                                                </p>
-                                            </div>
-                                            <button className="w-full py-4 rounded-xl bg-white text-black font-semibold text-sm hover:bg-neutral-200 transition-colors flex items-center justify-center gap-2">
-                                                View Complete Project
-                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                                            </button>
                                         </div>
                                     </div>
-                                </div>
-
-                                {/* ───── Card 3: UX Design ───── */}
-                                <div className="work-card-container group relative w-[350px] md:w-[420px] h-full shrink-0" style={{ perspective: "2000px" }}>
-                                    <div className="work-card-inner relative w-full h-full transition-transform" style={{ transformStyle: "preserve-3d" }}>
-                                        {/* Front */}
-                                        <div className="absolute inset-0 bg-white rounded-[2rem] p-4 flex flex-col" style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}>
-                                            <div className="w-full h-3/5 rounded-2xl bg-neutral-100 overflow-hidden mb-5">
-                                                {/* Placeholder Image */}
-                                                <div className="relative w-full h-full bg-gradient-to-tr from-rose-500/10 to-orange-500/10 flex items-center justify-center p-8">
-                                                    <div className="w-full h-2 bg-rose-500/20 rounded-full mb-3"></div>
-                                                    <div className="absolute w-[60%] h-2 bg-rose-500/20 rounded-full mb-3 translate-y-4"></div>
-                                                </div>
-                                            </div>
-                                            <div className="px-2">
-                                                <h3 className="text-2xl font-bold text-black mb-2">Omni Dashboard</h3>
-                                                <p className="text-neutral-500 text-sm font-medium">B2B User Experience Architecture</p>
-                                            </div>
-                                        </div>
-                                        {/* Back */}
-                                        <div className="absolute inset-0 bg-[#1a1a1a] rounded-[2rem] border border-neutral-800 p-8 flex flex-col justify-between" style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
-                                            <div>
-                                                <h3 className="text-white text-3xl font-bold mb-4">Omni Dashboard</h3>
-                                                <div className="w-12 h-1 bg-neutral-700 mb-6"></div>
-                                                <p className="text-neutral-400 text-sm leading-relaxed mb-6 block w-full">
-                                                    Restructuring a legacy SaaS product. We conducted extensive user testing to streamline a confusing 14-step onboarding process into a seamless 3-step wizard, resulting in a 40% reduction in bounce rate.
-                                                </p>
-                                            </div>
-                                            <button className="w-full py-4 rounded-xl bg-white text-black font-semibold text-sm hover:bg-neutral-200 transition-colors flex items-center justify-center gap-2">
-                                                View Complete Project
-                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* ───── Card 4: Posters ───── */}
-                                <div className="work-card-container group relative w-[350px] md:w-[420px] h-full shrink-0" style={{ perspective: "2000px" }}>
-                                    <div className="work-card-inner relative w-full h-full transition-transform" style={{ transformStyle: "preserve-3d" }}>
-                                        {/* Front */}
-                                        <div className="absolute inset-0 bg-white rounded-[2rem] p-4 flex flex-col" style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}>
-                                            <div className="w-full h-3/5 rounded-2xl bg-neutral-100 overflow-hidden mb-5">
-                                                {/* Placeholder Image */}
-                                                <div className="w-full h-full bg-gradient-to-tr from-yellow-500/10 to-amber-500/10 flex items-center justify-center font-black text-4xl text-yellow-500/20 tracking-tighter">
-                                                    POSTER
-                                                </div>
-                                            </div>
-                                            <div className="px-2">
-                                                <h3 className="text-2xl font-bold text-black mb-2">Exhibition '25</h3>
-                                                <p className="text-neutral-500 text-sm font-medium">Typography & Print Visuals</p>
-                                            </div>
-                                        </div>
-                                        {/* Back */}
-                                        <div className="absolute inset-0 bg-[#1a1a1a] rounded-[2rem] border border-neutral-800 p-8 flex flex-col justify-between" style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
-                                            <div>
-                                                <h3 className="text-white text-3xl font-bold mb-4">Exhibition '25</h3>
-                                                <div className="w-12 h-1 bg-neutral-700 mb-6"></div>
-                                                <p className="text-neutral-400 text-sm leading-relaxed mb-6 block w-full">
-                                                    A high-contrast, brutalist poster series for an upcoming modern art exhibition. Utilizing strict grid systems pushed to their limits to explore the boundaries of legibility and visual tension.
-                                                </p>
-                                            </div>
-                                            <button className="w-full py-4 rounded-xl bg-white text-black font-semibold text-sm hover:bg-neutral-200 transition-colors flex items-center justify-center gap-2">
-                                                View Complete Project
-                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* ───── Card 5: Branding ───── */}
-                                <div className="work-card-container group relative w-[350px] md:w-[420px] h-full shrink-0" style={{ perspective: "2000px" }}>
-                                    <div className="work-card-inner relative w-full h-full transition-transform" style={{ transformStyle: "preserve-3d" }}>
-                                        {/* Front */}
-                                        <div className="absolute inset-0 bg-white rounded-[2rem] p-4 flex flex-col" style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}>
-                                            <div className="w-full h-3/5 rounded-2xl bg-neutral-100 overflow-hidden mb-5">
-                                                <div className="w-full h-full bg-gradient-to-tr from-zinc-500/10 to-zinc-800/10 flex items-center justify-center p-8">
-                                                    <div className="w-16 h-16 border-4 border-zinc-800 rounded-full"></div>
-                                                </div>
-                                            </div>
-                                            <div className="px-2">
-                                                <h3 className="text-2xl font-bold text-black mb-2">Nexus Group</h3>
-                                                <p className="text-neutral-500 text-sm font-medium">Brand Strategy & Guidelines</p>
-                                            </div>
-                                        </div>
-                                        {/* Back */}
-                                        <div className="absolute inset-0 bg-[#1a1a1a] rounded-[2rem] border border-neutral-800 p-8 flex flex-col justify-between" style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
-                                            <div>
-                                                <h3 className="text-white text-3xl font-bold mb-4">Nexus Group</h3>
-                                                <div className="w-12 h-1 bg-neutral-700 mb-6"></div>
-                                                <p className="text-neutral-400 text-sm leading-relaxed mb-6 block w-full">
-                                                    Developed a comprehensive visual identity that resonates with their core audience. Delivered scalable logo systems, strict typographic hierarchy, and a 100-page brand playbook ensuring omni-channel consistency.
-                                                </p>
-                                            </div>
-                                            <button className="w-full py-4 rounded-xl bg-white text-black font-semibold text-sm hover:bg-neutral-200 transition-colors flex items-center justify-center gap-2">
-                                                View Complete Project
-                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* ───── Card 6: Packaging Design ───── */}
-                                <div className="work-card-container group relative w-[350px] md:w-[420px] h-full shrink-0" style={{ perspective: "2000px" }}>
-                                    <div className="work-card-inner relative w-full h-full transition-transform" style={{ transformStyle: "preserve-3d" }}>
-                                        {/* Front */}
-                                        <div className="absolute inset-0 bg-white rounded-[2rem] p-4 flex flex-col" style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}>
-                                            <div className="w-full h-3/5 rounded-2xl bg-[#E8E1E1] overflow-hidden mb-5">
-                                                {/* Decorative shape */}
-                                                <div className="w-full h-full relative p-8">
-                                                    <div className="absolute bottom-[-20%] right-[-20%] w-48 h-48 bg-white/40 rounded-full blur-xl"></div>
-                                                    <div className="w-16 h-24 bg-[#D3C7C7] rounded-sm shadow-md mt-6 mx-auto transform rotate-12"></div>
-                                                </div>
-                                            </div>
-                                            <div className="px-2">
-                                                <h3 className="text-2xl font-bold text-black mb-2">Aura Skincare</h3>
-                                                <p className="text-neutral-500 text-sm font-medium">Sustainable Structural Packaging</p>
-                                            </div>
-                                        </div>
-                                        {/* Back */}
-                                        <div className="absolute inset-0 bg-[#1a1a1a] rounded-[2rem] border border-neutral-800 p-8 flex flex-col justify-between" style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
-                                            <div>
-                                                <h3 className="text-white text-3xl font-bold mb-4">Aura Skincare</h3>
-                                                <div className="w-12 h-1 bg-neutral-700 mb-6"></div>
-                                                <p className="text-neutral-400 text-sm leading-relaxed mb-6 block w-full">
-                                                    Engineering a bespoke, highly sustainable unboxing experience. We designed structural cardboard replacements for legacy plastic inserts that speak volumes about their commitment to the planet before the product is even seen.
-                                                </p>
-                                            </div>
-                                            <button className="w-full py-4 rounded-xl bg-white text-black font-semibold text-sm hover:bg-neutral-200 transition-colors flex items-center justify-center gap-2">
-                                                View Complete Project
-                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                                ))}
 
 
                             </div>
@@ -783,7 +591,9 @@ export default function Home() {
                     </section>
                 </div>
             </main>
-            <Footer />
+            <div className="relative z-[60]">
+                <Footer />
+            </div>
         </>
     );
 }

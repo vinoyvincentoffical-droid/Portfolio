@@ -105,7 +105,7 @@ export default function ParticleButton({ children, particleColor = "#ffffff", cl
                 ))}
             </div>
 
-            <style jsx>{`
+            <style>{`
                 @keyframes particle-radiate {
                     0% {
                         opacity: 0.9;
